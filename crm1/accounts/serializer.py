@@ -3,8 +3,10 @@ from .models import Product
 
 
 class ProductListSerializer(serializers.ModelSerializer):
-
+    tags = serializers.SlugRelatedField(slug_field="name", read_only=True, many=True)
 
     class Meta:
         model = Product
-        field = '__all__'
+        fields = '__all__'
+
+

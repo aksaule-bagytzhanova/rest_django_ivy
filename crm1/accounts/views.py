@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Product
-from .serializer import ProductListSerializer
+from .models import Product, Order
+from .serializer import ProductListSerializer, OrderListSerializer
 
 
 class ProductListView(APIView):
@@ -12,9 +12,27 @@ class ProductListView(APIView):
         serializer = ProductListSerializer(products, many=True)
         return Response(serializer.data)
 
+
 class ProductDetailView(APIView):
 
     def get(self, request, pk):
         product = Product.objects.get(id=pk)
-        serializer = ProductListSerializer(product, many=False)
+        serializer = ProductListSerializer(product, many=False)     
         return Response(serializer.data)
+
+
+class OrderListView(APIView):
+
+    def get(self, request):
+        orders = Order.objects.all()
+        serializer = OrderListSerializer(orders, many=True)
+        return Response(serializer.data)
+
+
+class OrderDetailView(APIView):
+
+    def get(self, request, pk):
+        order = Order.objects.get(id=pk)
+        serializer = OrderListSerializer(order, many=True)
+        return Response(serializer.data)
+

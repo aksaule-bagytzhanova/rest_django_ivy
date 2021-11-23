@@ -21,6 +21,15 @@ class ProductDetailView(APIView):
         return Response(serializer.data)
 
 
+class CreateProduct(APIView):
+
+    def post(self, request, format=None):
+        serializer = ProductListSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+
 class OrderListView(APIView):
 
     def get(self, request):
@@ -36,3 +45,11 @@ class OrderDetailView(APIView):
         serializer = OrderListSerializer(order, many=True)
         return Response(serializer.data)
 
+
+class CreateOrder(APIView):
+
+    def post(self, request, format=None):
+        serializer = OrderListSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()

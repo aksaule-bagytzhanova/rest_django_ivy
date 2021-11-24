@@ -11,6 +11,9 @@ class ProductListSerializer(serializers.ModelSerializer):
 
 
 class OrderListSerializer(serializers.ModelSerializer):
+    customer = serializers.SlugRelatedField(slug_field="name", read_only=True)
+    product = serializers.SlugRelatedField(slug_field="name", read_only=True)
+
     class Meta:
         model = Order
         fields = '__all__'

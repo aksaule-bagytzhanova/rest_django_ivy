@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 
 from .models import Product, Order
 from .serializer import ProductListSerializer, OrderListSerializer
+from .service import get_client_ip
 
 
 class ProductListView(APIView):
@@ -42,7 +43,7 @@ class OrderDetailView(APIView):
 
     def get(self, request, pk):
         order = Order.objects.get(id=pk)
-        serializer = OrderListSerializer(order, many=True)
+        serializer = OrderListSerializer(order, many=False)
         return Response(serializer.data)
 
 

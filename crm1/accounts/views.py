@@ -1,35 +1,31 @@
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from .models import Product, Order
 from .serializer import ProductListSerializer, OrderListSerializer
 from .service import get_client_ip
 
 
-class ProductListView(APIView):
+class ProductListView(generics.ListAPIView):
+    serializer_class = ProductListSerializer
 
-    def get(self, request):
+    def get_queryset(self):
         products = Product.objects.all()
-        serializer = ProductListSerializer(products, many=True)
-        return Response(serializer.data)
+        return products
 
 
-class ProductDetailView(APIView):
+class ProductDetailView(generics.RetrieveAPIView):
 
-    def get(self, request, pk):
-        product = Product.objects.get(id=pk)
-        serializer = ProductListSerializer(product, many=False)     
-        return Response(serializer.data)
+    queryset = Product.objects.filter()
+    serializer_class = ProductListSerializer
 
 
-class CreateProduct(APIView):
+class CreateProduct(generics.CreateAPIView):
 
-    def post(self, request, format=None):
-        serializer = ProductListSerializer(data=request.data)
+    serializer_class = ProductListSerializer()
 
-        if serializer.is_valid():
-            serializer.save()
-
+    def perform_create(self, serializer):
+        serializer.save(ip=get_client_ip(self.request))
 
 class OrderListView(APIView):
 
@@ -54,3 +50,4 @@ class CreateOrder(APIView):
 
         if serializer.is_valid():
             serializer.save()
+        return Response(status=201)

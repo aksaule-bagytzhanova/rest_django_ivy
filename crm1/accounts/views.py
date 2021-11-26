@@ -27,27 +27,28 @@ class CreateProduct(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(ip=get_client_ip(self.request))
 
-class OrderListView(APIView):
 
-    def get(self, request):
+class OrderListView(generics.ListAPIView):
+
+    serializer_class = OrderListSerializer
+
+    def get_queryset(self):
         orders = Order.objects.all()
-        serializer = OrderListSerializer(orders, many=True)
-        return Response(serializer.data)
+        return orders
 
 
 class OrderDetailView(APIView):
 
-    def get(self, request, pk):
-        order = Order.objects.get(id=pk)
-        serializer = OrderListSerializer(order, many=False)
-        return Response(serializer.data)
+
+    queryset = Order.objects.filter()
+    serializer_class = OrderListSerializer
+
 
 
 class CreateOrder(APIView):
 
-    def post(self, request, format=None):
-        serializer = OrderListSerializer(data=request.data)
+    serializer_class = OrderListSerializer()
 
-        if serializer.is_valid():
-            serializer.save()
-        return Response(status=201)
+    def perform_create(self, serializer):
+        serializer.save(ip=get_client_ip(self.request))
+

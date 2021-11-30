@@ -3,12 +3,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Product, Order
 from .serializer import ProductListSerializer, OrderListSerializer
-from .service import get_client_ip
+from .service import get_client_ip, PaginationProducts
 
 
 class ProductListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ProductListSerializer
+    pagination_class = PaginationProducts
 
     def get_queryset(self):
         products = Product.objects.all()

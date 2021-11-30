@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Product, Order
@@ -7,6 +7,7 @@ from .service import get_client_ip
 
 
 class ProductListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = ProductListSerializer
 
     def get_queryset(self):
@@ -15,13 +16,14 @@ class ProductListView(generics.ListAPIView):
 
 
 class ProductDetailView(generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     queryset = Product.objects.filter()
     serializer_class = ProductListSerializer
 
 
 class CreateProduct(generics.CreateAPIView):
-
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = ProductListSerializer()
 
     def perform_create(self, serializer):
